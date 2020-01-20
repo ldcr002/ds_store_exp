@@ -40,6 +40,7 @@ class Scanner(object):
                     continue
                 else:
                     self.processed_url.add(url)
+                    # print("开始处理：{}".format(url))
                 base_url = url.rstrip('.DS_Store')
                 if not url.lower().startswith('http'):
                     url = 'http://%s' % url
@@ -65,6 +66,7 @@ class Scanner(object):
                         self.lock.release()
                         outFile.write(data)
                     if url.endswith('.DS_Store'):
+                        # print("开始解析：{}".format(url))
                         ds_store_file = cStringIO.StringIO()
                         ds_store_file.write(data)
                         d = DSStore.open(ds_store_file)
@@ -73,6 +75,8 @@ class Scanner(object):
                         for x in d._traverse(None):
                             dirs_files.add(x.filename)
                         for name in dirs_files:
+                            # print("{}.解析结果：{}".format(url, name))
+
                             if name != '.':
                                 self.queue.put(base_url + name)
                                 self.queue.put(base_url + name + '/.DS_Store')
